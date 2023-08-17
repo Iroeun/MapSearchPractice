@@ -41,9 +41,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     //API
     private NaverMap mNaverMap;
     private Retrofit retrofit;
-    private BusanRestaurantService service;
+//    private BusanRestaurantService service;
 
-    private static final String BASE_URL = "https://apis.data.go.kr/";
+    private static final String BASE_URL = "http://apis.data.go.kr/6260000/FoodService/";
 
     @Nullable
     @Override
@@ -61,7 +61,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        service = retrofit.create(BusanRestaurantService.class);
+//        service = retrofit.create(BusanRestaurantService.class);
 
         locationSource = new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
 
@@ -104,36 +104,34 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    private void fetchRestaurantData() {
-        String serviceKey = "6b31aH9j991v4MVhKX0sok2prlcNQjjBgL1Xj6MakWldP8zZFa9jujToWfzPpLVeEr12yjzzwpssiF2Rst5kfw%3D%3D";  // 인증키를 넣으세요.
-        int pageNo = 1;
-        int numOfRows = 10;
-        String resultType = "json";
-
-        Call<RestaurantResponse> call = service.getRestaurants(serviceKey, pageNo, numOfRows, resultType);
-//        Log.d("LOGAPI", call.toString());
-        call.enqueue(new Callback<RestaurantResponse>() {
-//            Log.d("LOGAPI", response.body().toString());
-            @Override
-            public void onResponse(Call<RestaurantResponse> call, Response<RestaurantResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<RestaurantResponse.RestaurantItem> restaurants = response.body().foodKr.row;
-                    for (RestaurantResponse.RestaurantItem restaurant : restaurants) {
-                        // MAIN_TITLE 출력
-                        Log.d("API", "MAIN_TITLE: " + restaurant.MAIN_TITLE);
-                    }
-                } else {
-                    // 오류 처리
-                    Log.d("API", "Error: " + response.errorBody());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<RestaurantResponse> call, Throwable t) {
-                // 네트워크 또는 변환 오류 처리
-                Log.e("API", "API Call Failed: " + t.getMessage());
-            }
-        });
-    }
+//    private void fetchRestaurantData() {
+//        String serviceKey = "6b31aH9j991v4MVhKX0sok2prlcNQjjBgL1Xj6MakWldP8zZFa9jujToWfzPpLVeEr12yjzzwpssiF2Rst5kfw%3D%3D";  // 인증키를 넣으세요.
+//        int pageNo = 1;
+//        int numOfRows = 10;
+//        String resultType = "json";
+//
+//        Call<RestaurantResponse> call = service.getRestaurants(serviceKey, pageNo, numOfRows, resultType);
+//        call.enqueue(new Callback<RestaurantResponse>() {
+//            @Override
+//            public void onResponse(Call<RestaurantResponse> call, Response<RestaurantResponse> response) {
+//                if (response.isSuccessful() && response.body() != null) {
+//                    List<RestaurantResponse.RestaurantItem> restaurants = response.body().foodKr.row;
+//                    for (RestaurantResponse.RestaurantItem restaurant : restaurants) {
+//                        // MAIN_TITLE 출력
+//                        Log.d("API", "MAIN_TITLE: " + restaurant.MAIN_TITLE);
+//                    }
+//                } else {
+//                    // 오류 처리
+//                    Log.d("API", "Error: " + response.errorBody());
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<RestaurantResponse> call, Throwable t) {
+//                // 네트워크 또는 변환 오류 처리
+//                Log.e("API", "API Call Failed: " + t.getMessage());
+//            }
+//        });
+//    }
 
 }
