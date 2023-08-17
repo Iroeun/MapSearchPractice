@@ -28,11 +28,13 @@ public class resultActivity extends AppCompatActivity {
         anything = findViewById(R.id.anything);
 
         Intent intent = getIntent();
-        int storeImage = intent.getIntExtra("storeImage", 0);
+        int storeImage = intent.getIntExtra("storeImage", -1);
+        if (storeImage != -1) {
+            Glide.with(getApplicationContext()).load(storeImage).into(anything);
+        }
         String Name = intent.getStringExtra("Name");
         String storeAddress = intent.getStringExtra("storeAddress");
 
-        Glide.with(getApplicationContext()).load(storeImage).into(anything);
         storeName.setText(Name);
         address.setText(storeAddress);
 
