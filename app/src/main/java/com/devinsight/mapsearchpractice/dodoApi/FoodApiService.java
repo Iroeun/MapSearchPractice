@@ -1,6 +1,6 @@
 package com.devinsight.mapsearchpractice.dodoApi;
 
-import java.util.List;
+import com.devinsight.mapsearchpractice.dodoApi.data.getFoodKr;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -8,10 +8,10 @@ import retrofit2.http.Query;
 
 public interface FoodApiService {
     @GET("/6260000/FoodService/getFoodKr")
-    Call<List<FoodResonseDTO>> getFoodInfo(
+    Call<getFoodKr> getFoodInfoList(
             @Query("serviceKey") String serviceKey,
             @Query("pageNo") int pageNo,
-            @Query("numOfRows") int numOfRows
+            @Query("numOfRows") int numOfRows,
+            @Query("resultType") String resultType
     );
-
 }

@@ -9,10 +9,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitClientDODO {
 
     private static final String BASE_URL = "http://apis.data.go.kr/";
-    private static final String SERVICE_KEY = "uOimQvpXv4Oid51cKUxn7CBa2INY0E%2FuWjIAwIYePkx31iCI1Nc3RgjNdYuk2H3ZkXTw8Lp%2BonebmcoJSmQjcA%3D%3D";
     private static Retrofit retrofit;
 
-    public static Retrofit getRetrofit(String baseUrl){
+    private static Retrofit getRetrofit(String baseUrl){
         if(retrofit == null){
             Retrofit.Builder builder = new Retrofit.Builder();
             builder.baseUrl(baseUrl);
