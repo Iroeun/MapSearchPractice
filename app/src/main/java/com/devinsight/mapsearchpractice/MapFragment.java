@@ -43,7 +43,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private Retrofit retrofit;
     private BusanRestaurantService service;
 
-    private static final String BASE_URL = "http://apis.data.go.kr/6260000/FoodService/";
+    private static final String BASE_URL = "https://apis.data.go.kr/";
 
     @Nullable
     @Override
@@ -95,7 +95,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
 
         // API 호출
-        fetchRestaurantData();
+//        fetchRestaurantData();
     }
 
     @Override
@@ -111,7 +111,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         String resultType = "json";
 
         Call<RestaurantResponse> call = service.getRestaurants(serviceKey, pageNo, numOfRows, resultType);
+//        Log.d("LOGAPI", call.toString());
         call.enqueue(new Callback<RestaurantResponse>() {
+//            Log.d("LOGAPI", response.body().toString());
             @Override
             public void onResponse(Call<RestaurantResponse> call, Response<RestaurantResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
