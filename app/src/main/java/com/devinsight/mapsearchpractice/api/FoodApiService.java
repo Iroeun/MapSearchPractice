@@ -1,6 +1,6 @@
-package com.devinsight.mapsearchpractice.dodoApi;
+package com.devinsight.mapsearchpractice.api;
 
-import com.devinsight.mapsearchpractice.dodoApi.data.getFoodKr;
+import com.devinsight.mapsearchpractice.api.data.getFoodKr;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

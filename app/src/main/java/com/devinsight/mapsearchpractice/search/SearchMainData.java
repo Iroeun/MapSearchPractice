@@ -1,4 +1,4 @@
-package com.devinsight.mapsearchpractice;
+package com.devinsight.mapsearchpractice.search;
 
 public class SearchMainData {
     private int storeImage;

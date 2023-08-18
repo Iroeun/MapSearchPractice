@@ -1,4 +1,4 @@
-package com.devinsight.mapsearchpractice.dodoApi;
+package com.devinsight.mapsearchpractice.api;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.devinsight.mapsearchpractice.R;
-import com.devinsight.mapsearchpractice.dodoApi.data.getFoodKr;
+import com.devinsight.mapsearchpractice.api.data.getFoodKr;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -22,7 +22,7 @@ public class ApiTestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_api_test);
 
-        Call<getFoodKr> call = RetrofitClientDODO.getFoodApiService().getFoodInfoList(SERVICE_KEY, 1, 10, "json");
+        Call<getFoodKr> call = RetrofitClient.getFoodApiService().getFoodInfoList(SERVICE_KEY, 1, 10, "json");
         call.enqueue(new Callback<getFoodKr>() {
             @Override
             public void onResponse(Call<getFoodKr> call, Response<getFoodKr> response) {

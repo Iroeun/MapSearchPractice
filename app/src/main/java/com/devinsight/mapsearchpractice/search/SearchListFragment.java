@@ -1,4 +1,4 @@
-package com.devinsight.mapsearchpractice;
+package com.devinsight.mapsearchpractice.search;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -9,9 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.devinsight.mapsearchpractice.R;
-import com.devinsight.mapsearchpractice.SearchAdapter;
-import com.devinsight.mapsearchpractice.SearchMainData;
-import com.devinsight.mapsearchpractice.resultActivity;
 
 import java.util.ArrayList;
 

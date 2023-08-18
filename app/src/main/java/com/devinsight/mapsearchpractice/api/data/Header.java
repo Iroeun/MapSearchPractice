@@ -1,4 +1,4 @@
-package com.devinsight.mapsearchpractice.dodoApi.data;
+package com.devinsight.mapsearchpractice.api.data;
 // 통신에 직접적으로 쓰지 않음, 하지만 header.item,num과 같인 level의 상위 카테고리
 public class Header {
     private String code;

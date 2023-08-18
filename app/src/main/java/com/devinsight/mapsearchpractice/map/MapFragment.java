@@ -1,4 +1,4 @@
-package com.devinsight.mapsearchpractice;
+package com.devinsight.mapsearchpractice.map;
 
 import android.graphics.Color;
 import android.location.Location;
@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.devinsight.mapsearchpractice.R;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.NaverMap;

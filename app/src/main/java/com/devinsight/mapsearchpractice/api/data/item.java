@@ -1,4 +1,4 @@
-package com.devinsight.mapsearchpractice.dodoApi.data;
+package com.devinsight.mapsearchpractice.api.data;
 
 import com.google.gson.annotations.SerializedName;
 

@@ -1,4 +1,4 @@
-package com.devinsight.mapsearchpractice;
+package com.devinsight.mapsearchpractice.search;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.devinsight.mapsearchpractice.R;
 
 public class resultActivity extends AppCompatActivity {
 
