@@ -7,6 +7,7 @@ import java.util.List;
 public class header_item_num_page {
     private Header header;
     private List<item> item;
+
     private int numOfRows;
     private int pageNo;
     private int totalCount;

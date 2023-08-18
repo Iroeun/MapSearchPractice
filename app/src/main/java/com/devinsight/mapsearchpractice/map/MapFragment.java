@@ -1,5 +1,7 @@
 package com.devinsight.mapsearchpractice.map;
 
+import static java.lang.Double.parseDouble;
+
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
@@ -19,7 +21,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.devinsight.mapsearchpractice.R;
+import com.devinsight.mapsearchpractice.api.RetrofitClient;
+import com.devinsight.mapsearchpractice.api.data.getFoodKr;
+import com.devinsight.mapsearchpractice.api.data.header_item_num_page;
+import com.devinsight.mapsearchpractice.api.data.item;
 import com.naver.maps.geometry.LatLng;
+import com.naver.maps.geometry.LatLngBounds;
 import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
@@ -55,7 +62,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,MapStore
 
 //    private BusanRestaurantService service;
 
-    private static final String BASE_URL = "http://apis.data.go.kr/6260000/FoodService/";
+    private static final String SERVICE_KEY = "6b31aH9j991v4MVhKX0sok2prlcNQjjBgL1Xj6MakWldP8zZFa9jujToWfzPpLVeEr12yjzzwpssiF2Rst5kfw==";
+
+    private ArrayList<Marker> allMarkers = new ArrayList<>();
+
+
+
 
     @Nullable
     @Override
@@ -65,10 +77,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,MapStore
         recyclerView = view.findViewById(R.id.rc_card);
         cardLit = new ArrayList<>();
 
-        cardLit.add(new MapStoreCardData(R.drawable.ic_launcher_background,7942, 9413, 33,4, 300,"가게 이름","주소",true));
-        cardLit.add(new MapStoreCardData(R.drawable.ic_launcher_background,7942, 9413, 33,4, 300,"가게 이름","주소",true));
-        cardLit.add(new MapStoreCardData(R.drawable.ic_launcher_background,7942, 9413, 33,4, 300,"가게 이름","주소",true));
-        cardLit.add(new MapStoreCardData(R.drawable.ic_launcher_background,7942, 9413, 33,4, 300,"가게 이름","주소",true));
+//        cardLit.add(new MapStoreCardData(R.drawable.ic_launcher_background,7942, 9413, 33,4, 300,"가게 이름","주소",true));
+//        cardLit.add(new MapStoreCardData(R.drawable.ic_launcher_background,7942, 9413, 33,4, 300,"가게 이름","주소",true));
+//        cardLit.add(new MapStoreCardData(R.drawable.ic_launcher_background,7942, 9413, 33,4, 300,"가게 이름","주소",true));
+//        cardLit.add(new MapStoreCardData(R.drawable.ic_launcher_background,7942, 9413, 33,4, 300,"가게 이름","주소",true));
 
         cardAdapter = new MapStoreCardAdapter(getContext(), cardLit, this::onCardClick);
         recyclerView.setAdapter(cardAdapter);
@@ -92,13 +104,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,MapStore
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Retrofit 초기화
-        retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL) // 실제 기본 URL로 변경
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-//        service = retrofit.create(BusanRestaurantService.class);
 
         locationSource = new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
 
@@ -114,7 +119,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,MapStore
 
         naverMap.setLocationSource(locationSource);
 
-        LatLng defaultPosition = new LatLng(37.5053, 126.9574);  // 기본 좌표
+//        LatLng defaultPosition = new LatLng(37.498095, 127.027610);  // 기본 위치는 강남역
+        LatLng defaultPosition = new LatLng(35.115095, 129.042694); //이지만 지금은 부산역으로 해놓음
         naverMap.moveCamera(CameraUpdate.scrollTo(defaultPosition));
 
         currentLocationMarker.setPosition(defaultPosition);
@@ -126,14 +132,35 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,MapStore
         naverMap.addOnCameraChangeListener(new NaverMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(int reason, boolean animated) {
+
+                //TODO : 이 부분은 확대하면 씨앗모양핀, 축소하면 숫자만 떠오게 할 때 써야할 듯
+//                float currentZoom = (float) naverMap.getCameraPosition().zoom;
+//                // 예를 들어 zoom 수준이 15 이상일 때만 마커를 보이게 합니다.
+//                if (currentZoom >= 15) {
+//                    currentLocationMarker.setMap(naverMap);
+//                } else {
+//                    currentLocationMarker.setMap(null); // 마커를 지도에서 제거합니다.
+//                }
+
+
                 LatLng center = naverMap.getCameraPosition().target;
-                Toast.makeText(getActivity(), "Latitude: " + center.latitude + ", Longitude: " + center.longitude, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), "Latitude: " + center.latitude + ", Longitude: " + center.longitude, Toast.LENGTH_SHORT).show();
                 currentLocationMarker.setPosition(center);
+
+                // 경계 밖의 마커를 제거하는 로직
+                LatLngBounds currentBounds = mNaverMap.getContentBounds();
+                ArrayList<Marker> markersToRemove = new ArrayList<>();
+                for (Marker marker : allMarkers) {
+                    if (!currentBounds.contains(marker.getPosition())) {
+                        marker.setMap(null);  // 지도에서 마커 제거
+                        markersToRemove.add(marker);  // 리스트에서 제거할 마커 추가
+                    }
+                }
+//                allMarkers.removeAll(markersToRemove);  // 마커 리스트에서 제거
+                fetchFoodData(currentBounds); // 바뀐 currentBounds를 API 호출 시에 전달
             }
         });
 
-        // API 호출
-//        fetchRestaurantData();
     }
 
     @Override
@@ -142,36 +169,57 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,MapStore
         locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
+    // ... 기존의 MapFragment 코드 ...
+
+    private void fetchFoodData(LatLngBounds currentBounds) {
+        Call<getFoodKr> call = RetrofitClient.getFoodApiService().getFoodInfoList(SERVICE_KEY, 1, 10, "json");
+        call.enqueue(new Callback<getFoodKr>() {
+            @Override
+            public void onResponse(Call<getFoodKr> call, Response<getFoodKr> response) {
+                if (response.isSuccessful()) {
+                    header_item_num_page item_list = response.body().getGetFoodKr();
+                    List<item> items = item_list.getItem();
+
+                    // 기존 마커들을 지도에서 제거하고 리스트에서도 제거
+                    for (Marker marker : allMarkers) {
+                        marker.setMap(null);
+                    }
+                    allMarkers.clear();
+
+                    // 리사이클러뷰 항목을 모두 제거
+                    cardLit.clear();
+
+                    for(item singleItem : items) {
+                        double lat = singleItem.getLAT();
+                        double lng = singleItem.getLNG();
+                        LatLng position = new LatLng(lat, lng);
+
+                        if (currentBounds.contains(position)) {
+                            Marker marker = new Marker();
+                            marker.setPosition(position);
+                            marker.setMap(mNaverMap);
+                            allMarkers.add(marker);
+
+                            // 리사이클러뷰 데이터 목록 업데이트
+                            cardLit.add(new MapStoreCardData(R.drawable.ic_launcher_background, (int)lat, (int)lng, 33, 4, 300, "가게 이름", "주소", true));
+
+                            Log.d("LOGAPI", String.valueOf(position));
+                            Log.d("성공", " 위도: " + lat + " 경도: " + lng);
+                        }
+                    }
+
+                    cardAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<getFoodKr> call, Throwable t) {
+                Log.e("RetrofitFailure", "Network or conversion error: " + t.getMessage());
+            }
+        });
+    }
 
 
-//    private void fetchRestaurantData() {
-//        String serviceKey = "6b31aH9j991v4MVhKX0sok2prlcNQjjBgL1Xj6MakWldP8zZFa9jujToWfzPpLVeEr12yjzzwpssiF2Rst5kfw%3D%3D";  // 인증키를 넣으세요.
-//        int pageNo = 1;
-//        int numOfRows = 10;
-//        String resultType = "json";
-//
-//        Call<RestaurantResponse> call = service.getRestaurants(serviceKey, pageNo, numOfRows, resultType);
-//        call.enqueue(new Callback<RestaurantResponse>() {
-//            @Override
-//            public void onResponse(Call<RestaurantResponse> call, Response<RestaurantResponse> response) {
-//                if (response.isSuccessful() && response.body() != null) {
-//                    List<RestaurantResponse.RestaurantItem> restaurants = response.body().foodKr.row;
-//                    for (RestaurantResponse.RestaurantItem restaurant : restaurants) {
-//                        // MAIN_TITLE 출력
-//                        Log.d("API", "MAIN_TITLE: " + restaurant.MAIN_TITLE);
-//                    }
-//                } else {
-//                    // 오류 처리
-//                    Log.d("API", "Error: " + response.errorBody());
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<RestaurantResponse> call, Throwable t) {
-//                // 네트워크 또는 변환 오류 처리
-//                Log.e("API", "API Call Failed: " + t.getMessage());
-//            }
-//        });
-//    }
+
 
 }
