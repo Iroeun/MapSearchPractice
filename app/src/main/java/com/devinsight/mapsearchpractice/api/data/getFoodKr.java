@@ -6,14 +6,6 @@ public class getFoodKr {
     @SerializedName("getFoodKr")
     private header_item_num_page getFoodKr;
 
-
-
-
-
-
-
-
-
     public header_item_num_page getGetFoodKr() {
         return getFoodKr;
     }

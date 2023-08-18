@@ -6,7 +6,7 @@ import java.util.List;
 
 public class header_item_num_page {
     private Header header;
-    private List<item> item;
+    private List<StoreItem> StoreItem;
     private int numOfRows;
     private int pageNo;
     private int totalCount;
@@ -19,12 +19,12 @@ public class header_item_num_page {
         this.header = header;
     }
 
-    public List<item> getItem() {
-        return item;
+    public List<StoreItem> getItem() {
+        return StoreItem;
     }
 
-    public void setItem(List<item> item) {
-        this.item = item;
+    public void setItem(List<StoreItem> StoreItem) {
+        this.StoreItem = StoreItem;
     }
 
     public int getNumOfRows() {
@@ -51,9 +51,9 @@ public class header_item_num_page {
         this.totalCount = totalCount;
     }
 
-    public header_item_num_page(Header header, List<item> item, int numOfRows, int pageNo, int totalCount) {
+    public header_item_num_page(Header header, List<StoreItem> StoreItem, int numOfRows, int pageNo, int totalCount) {
         this.header = header;
-        this.item = item;
+        this.StoreItem = StoreItem;
         this.numOfRows = numOfRows;
         this.pageNo = pageNo;
         this.totalCount = totalCount;
