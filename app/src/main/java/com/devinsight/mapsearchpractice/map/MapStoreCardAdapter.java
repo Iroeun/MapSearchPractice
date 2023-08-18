@@ -1,3 +1,4 @@
+//멘토링 때 고친 코드
 package com.devinsight.mapsearchpractice.map;
 
 import android.content.Context;
@@ -78,6 +79,7 @@ public class MapStoreCardAdapter extends RecyclerView.Adapter<MapStoreCardAdapte
         }
 
         public void setData(MapStoreCardData cardData){
+
             this.cardData = cardData;
 
             storeImage.setImageResource(cardData.getStoreImage());
@@ -94,12 +96,13 @@ public class MapStoreCardAdapter extends RecyclerView.Adapter<MapStoreCardAdapte
         @Override
         public void onClick(View view) {
             if(mapCardItemListner != null){
-                mapCardItemListner.onCardClick(cardData);
+                this.getAbsoluteAdapterPosition();
+                mapCardItemListner.onCardClick(cardData, getAbsoluteAdapterPosition());
             }
         }
     }
 
     public interface mapCardItemListner{
-        void onCardClick(MapStoreCardData item);
+        void onCardClick(MapStoreCardData item, int position);
     }
 }

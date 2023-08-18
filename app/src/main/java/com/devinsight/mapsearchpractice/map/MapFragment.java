@@ -1,3 +1,4 @@
+//기존 코드
 package com.devinsight.mapsearchpractice.map;
 
 import static java.lang.Double.parseDouble;
@@ -96,8 +97,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,MapStore
 
     }
     @Override
-    public void onCardClick(MapStoreCardData item) {
-
+    public void onCardClick(MapStoreCardData item, int position) {
+//        cardAdapter.notifyItem
     }
 
     @Override
