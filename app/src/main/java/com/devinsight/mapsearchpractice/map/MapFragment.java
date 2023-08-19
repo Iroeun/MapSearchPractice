@@ -90,10 +90,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,MapStore
         recyclerView.setLayoutManager(linearLayoutManager);
         snapHelper.attachToRecyclerView(recyclerView);
 
-
-
         return view;
-
 
     }
     @Override
@@ -104,7 +101,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,MapStore
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
 
         locationSource = new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
 
@@ -126,7 +122,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,MapStore
 
         currentLocationMarker.setPosition(defaultPosition);
         currentLocationMarker.setMap(naverMap); // 마커를 지도에 추가
-
         currentLocationMarker.setIconTintColor(Color.RED);
 
         // 카메라가 변경될 때마다 호출되는 리스너를 설정합니다.
@@ -174,9 +169,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,MapStore
 
     private void fetchFoodData(LatLngBounds currentBounds) {
         Call<getFoodKr> call = RetrofitClient.getFoodApiService().getFoodInfoList(SERVICE_KEY, 1, 10, "json");
+        Log.d("LOGcall", call.toString());
         call.enqueue(new Callback<getFoodKr>() {
             @Override
             public void onResponse(Call<getFoodKr> call, Response<getFoodKr> response) {
+                Log.d("LOG", "onResponse");
                 if (response.isSuccessful()) {
                     header_item_num_page item_list = response.body().getGetFoodKr();
                     List<item> items = item_list.getItem();
@@ -193,6 +190,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,MapStore
                     for(item singleItem : items) {
                         double lat = singleItem.getLAT();
                         double lng = singleItem.getLNG();
+                        String store_name = singleItem.getMAIN_TITLE();
+                        String address = singleItem.getADDR1();
+//                        String imageUrl = singleItem.getMAIN_IMG_NORMAL(); //가게 이미지 가져와야 함
+
                         LatLng position = new LatLng(lat, lng);
 
                         if (currentBounds.contains(position)) {
@@ -202,7 +203,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,MapStore
                             allMarkers.add(marker);
 
                             // 리사이클러뷰 데이터 목록 업데이트
-                            cardLit.add(new MapStoreCardData(R.drawable.ic_launcher_background, (int)lat, (int)lng, 33, 4, 300, "가게 이름", "주소", true));
+                            cardLit.add(new MapStoreCardData(R.drawable.ic_launcher_background, lat, lng, 33, 4, 300, store_name, address, true));
 
                             Log.d("LOGAPI", String.valueOf(position));
                             Log.d("성공", " 위도: " + lat + " 경도: " + lng);
@@ -215,7 +216,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,MapStore
 
             @Override
             public void onFailure(Call<getFoodKr> call, Throwable t) {
-                Log.e("RetrofitFailure", "Network or conversion error: " + t.getMessage());
+                Log.e("LOGRetrofitFailure", "Network or conversion error: " + t.getMessage());
             }
         });
     }

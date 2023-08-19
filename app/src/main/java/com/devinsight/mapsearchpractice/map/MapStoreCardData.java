@@ -4,8 +4,8 @@ public class MapStoreCardData {
 
 
     private int storeImage;
-    private int storeTag1;
-    private int storeTag2;
+    private double storeTag1;
+    private double storeTag2;
     private int reviewNum;
     private int starlating;
     private int distance;
@@ -13,7 +13,7 @@ public class MapStoreCardData {
     private String address;
     private boolean like;
 
-    public MapStoreCardData(int storeImage, int storeTag1, int storeTag2, int reviewer, int starlating, int distance, String storeName, String address, boolean like) {
+    public MapStoreCardData(int storeImage, double storeTag1, double storeTag2, int reviewer, int starlating, int distance, String storeName, String address, boolean like) {
         this.storeImage = storeImage;
         this.storeTag1 = storeTag1;
         this.storeTag2 = storeTag2;
@@ -33,19 +33,19 @@ public class MapStoreCardData {
         this.storeImage = storeImage;
     }
 
-    public int getStoreTag1() {
+    public double getStoreTag1() {
         return storeTag1;
     }
 
-    public void setStoreTag1(int storeTag1) {
+    public void setStoreTag1(double storeTag1) {
         this.storeTag1 = storeTag1;
     }
 
-    public int getStoreTag2() {
+    public double getStoreTag2() {
         return storeTag2;
     }
 
-    public void setStoreTag2(int storeTag2) {
+    public void setStoreTag2(double storeTag2) {
         this.storeTag2 = storeTag2;
     }
 
