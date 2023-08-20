@@ -12,6 +12,7 @@ import com.devinsight.mapsearchpractice.search.SearchListFragment;
 
 public class MainActivity extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
                         .replace(R.id.container, new SearchListFragment())
                         .addToBackStack(null)  // 이전 프래그먼트로 돌아갈 수 있도록 백 스택에 추가
                         .commit();
+
+
             }
         });
 

@@ -2,19 +2,19 @@ package com.devinsight.mapsearchpractice.api.data;
 
 import com.google.gson.annotations.SerializedName;
 
-public class StoreItem {
-    @SerializedName("LAT")
+public class Item {
+
     private double LAT; // 위도
-    @SerializedName("LNG")
+
     private double LNG; // 경도
-    @SerializedName("ADDR1")
+
     private String ADDR1; // 주소
-    @SerializedName("MAIN_TITLE")
+
     private String MAIN_TITLE; // 가게 이름
-    @SerializedName("MAIN_IMG_NORMAL")
+
     private String MAIN_IMG_NORMAL; // 이미지 URL
 
-    public StoreItem(double LAT, double LNG, String ADDR1, String MAIN_TITLE, String MAIN_IMG_NORMAL) {
+    public Item(double LAT, double LNG, String ADDR1, String MAIN_TITLE, String MAIN_IMG_NORMAL) {
         this.LAT = LAT;
         this.LNG = LNG;
         this.ADDR1 = ADDR1;

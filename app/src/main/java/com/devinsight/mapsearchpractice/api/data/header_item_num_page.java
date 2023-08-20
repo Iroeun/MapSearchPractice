@@ -1,14 +1,21 @@
 package com.devinsight.mapsearchpractice.api.data;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 
 
 public class header_item_num_page {
+
     private Header header;
-    private List<StoreItem> StoreItem;
+
+    private List<com.devinsight.mapsearchpractice.api.data.Item> item;
+
     private int numOfRows;
+
     private int pageNo;
+
     private int totalCount;
 
     public Header getHeader() {
@@ -19,12 +26,12 @@ public class header_item_num_page {
         this.header = header;
     }
 
-    public List<StoreItem> getItem() {
-        return StoreItem;
+    public List<Item> getItem() {
+        return item;
     }
 
-    public void setItem(List<StoreItem> StoreItem) {
-        this.StoreItem = StoreItem;
+    public void setItem(List<com.devinsight.mapsearchpractice.api.data.Item> Item) {
+        this.item = Item;
     }
 
     public int getNumOfRows() {
@@ -51,9 +58,9 @@ public class header_item_num_page {
         this.totalCount = totalCount;
     }
 
-    public header_item_num_page(Header header, List<StoreItem> StoreItem, int numOfRows, int pageNo, int totalCount) {
+    public header_item_num_page(Header header, List<com.devinsight.mapsearchpractice.api.data.Item> Item, int numOfRows, int pageNo, int totalCount) {
         this.header = header;
-        this.StoreItem = StoreItem;
+        this.item = Item;
         this.numOfRows = numOfRows;
         this.pageNo = pageNo;
         this.totalCount = totalCount;
