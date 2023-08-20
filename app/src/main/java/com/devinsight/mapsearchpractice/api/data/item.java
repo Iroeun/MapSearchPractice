@@ -14,6 +14,9 @@ public class item {
     @SerializedName("MAIN_IMG_NORMAL")
     private String MAIN_IMG_NORMAL; // 이미지 URL
 
+    @SerializedName("MAIN_IMG_THUMB")
+    private String MAIN_IMG_THUMB; // 썸네일 이미지 URL
+
     public item(double LAT, double LNG, String ADDR1, String MAIN_TITLE, String MAIN_IMG_NORMAL) {
         this.LAT = LAT;
         this.LNG = LNG;
@@ -60,5 +63,13 @@ public class item {
 
     public void setMAIN_IMG_NORMAL(String MAIN_IMG_NORMAL) {
         this.MAIN_IMG_NORMAL = MAIN_IMG_NORMAL;
+    }
+
+    public String getMAIN_IMG_THUMB() {
+        return MAIN_IMG_THUMB;
+    }
+
+    public void setMAIN_IMG_THUMB(String MAIN_IMG_THUMB) {
+        this.MAIN_IMG_THUMB = MAIN_IMG_THUMB;
     }
 }

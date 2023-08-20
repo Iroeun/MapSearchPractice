@@ -63,7 +63,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,MapStore
 
 //    private BusanRestaurantService service;
 
-    private static final String SERVICE_KEY = "6b31aH9j991v4MVhKX0sok2prlcNQjjBgL1Xj6MakWldP8zZFa9jujToWfzPpLVeEr12yjzzwpssiF2Rst5kfw==";
+    private static final String SERVICE_KEY = "f/0yJ7IUfTZVvJdClCfaIQop0abS6e5mUmFusgzFAmiIJXVR7FmCSCBmyBYXPuMF/J0b3jbV2T5+Tst4AYJH2Q==";
 
     private ArrayList<Marker> allMarkers = new ArrayList<>();
 
@@ -192,7 +192,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,MapStore
                         double lng = singleItem.getLNG();
                         String store_name = singleItem.getMAIN_TITLE();
                         String address = singleItem.getADDR1();
-//                        String imageUrl = singleItem.getMAIN_IMG_NORMAL(); //가게 이미지 가져와야 함
+                        String imageUrl = singleItem.getMAIN_IMG_THUMB(); //가게 썸네일 가져와야 함
 
                         LatLng position = new LatLng(lat, lng);
 
@@ -204,9 +204,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,MapStore
 
                             // 리사이클러뷰 데이터 목록 업데이트
                             cardLit.add(new MapStoreCardData(R.drawable.ic_launcher_background, lat, lng, 33, 4, 300, store_name, address, true));
+//                            Log.d("LOGimage", imageUrl);
+//                            Log.d("LOGAPI", String.valueOf(position));
 
-                            Log.d("LOGAPI", String.valueOf(position));
-                            Log.d("성공", " 위도: " + lat + " 경도: " + lng);
+//                            Log.d("성공", " 위도: " + lat + " 경도: " + lng);
                         }
                     }
 
