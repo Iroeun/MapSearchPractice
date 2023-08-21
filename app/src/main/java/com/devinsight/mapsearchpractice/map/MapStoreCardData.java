@@ -2,8 +2,8 @@ package com.devinsight.mapsearchpractice.map;
 
 public class MapStoreCardData {
 
-
-    private int storeImage;
+    private int main_Image;
+    private String thumb_nail_url;
     private double storeTag1;
     private double storeTag2;
     private int reviewNum;
@@ -13,8 +13,8 @@ public class MapStoreCardData {
     private String address;
     private boolean like;
 
-    public MapStoreCardData(int storeImage, double storeTag1, double storeTag2, int reviewer, int starlating, int distance, String storeName, String address, boolean like) {
-        this.storeImage = storeImage;
+    public MapStoreCardData(String thumb_nail_url, double storeTag1, double storeTag2, int reviewer, int starlating, int distance, String storeName, String address, boolean like) {
+        this.thumb_nail_url = thumb_nail_url;
         this.storeTag1 = storeTag1;
         this.storeTag2 = storeTag2;
         this.reviewNum = reviewer;
@@ -25,12 +25,27 @@ public class MapStoreCardData {
         this.like = like;
     }
 
-    public int getStoreImage() {
-        return storeImage;
+//    public int getStoreImage() {
+//        return main_Image;
+//    }
+//
+//    public void setStoreImage(int storeImage) {
+//        this.main_Image = storeImage;
+//    }
+
+    public int getMain_Image() {
+        return main_Image;
     }
 
-    public void setStoreImage(int storeImage) {
-        this.storeImage = storeImage;
+    public void setMain_Image(int main_Image) {
+        this.main_Image = main_Image;
+    }
+    public String getThumbNailUrl() {
+        return thumb_nail_url;
+    }
+
+    public void setThumbNailUrl(String thubmNailUrl) {
+        this.thumb_nail_url = thubmNailUrl;
     }
 
     public double getStoreTag1() {
@@ -96,4 +111,8 @@ public class MapStoreCardData {
     public void setLike(boolean like) {
         this.like = like;
     }
+
+
+
+
 }

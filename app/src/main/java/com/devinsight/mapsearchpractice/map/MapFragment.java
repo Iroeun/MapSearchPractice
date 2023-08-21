@@ -1,3 +1,4 @@
+//그냥 현재 위치 m로 표시
 //기존 코드
 package com.devinsight.mapsearchpractice.map;
 
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +51,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,MapStore
 
     //지도
     private FusedLocationSource locationSource;
+    private Location mCurrentLocation;
+
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
     private Marker currentLocationMarker = new Marker();
 
@@ -61,11 +65,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,MapStore
     private MapStoreCardAdapter cardAdapter;
     private ArrayList<MapStoreCardData> cardLit;
 
-//    private BusanRestaurantService service;
-
-    private static final String SERVICE_KEY = "f/0yJ7IUfTZVvJdClCfaIQop0abS6e5mUmFusgzFAmiIJXVR7FmCSCBmyBYXPuMF/J0b3jbV2T5+Tst4AYJH2Q==";
+    private static final String SERVICE_KEY = "nrOGw0QURUK73GF9IZ1qwK2L/48kRarW7q/UHFbPSs1XJamzUDdYNTwLz81QgUlPLhJJDSUDzGGMPP1frVfl3w==";
 
     private ArrayList<Marker> allMarkers = new ArrayList<>();
+
+    private boolean canCallAPI = true;
+    private static final long API_CALL_DELAY = 5000; // 예: 5초
+    private Handler handler = new Handler();
 
 
 
@@ -110,7 +116,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,MapStore
 
 
     @Override
-    public void onMapReady(NaverMap naverMap) {
+    public void onMapReady(NaverMap naverMap) { //지도가 준비됐을 때 호출되는 콜백 메소드
 
         mNaverMap = naverMap;  // 지도 인스턴스 저장
 
@@ -152,21 +158,57 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,MapStore
                         markersToRemove.add(marker);  // 리스트에서 제거할 마커 추가
                     }
                 }
+
+                if (canCallAPI) {
+                    fetchFoodData(currentBounds);
+                    canCallAPI = false;
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            canCallAPI = true;
+                        }
+                    }, API_CALL_DELAY);
+                }
 //                allMarkers.removeAll(markersToRemove);  // 마커 리스트에서 제거
-                fetchFoodData(currentBounds); // 바뀐 currentBounds를 API 호출 시에 전달
+//                fetchFoodData(currentBounds); // 바뀐 currentBounds를 API 호출 시에 전달
+            }
+
+        });
+
+        naverMap.addOnLocationChangeListener(new NaverMap.OnLocationChangeListener() {
+            @Override
+            public void onLocationChange(Location location) {
+                mCurrentLocation = location; // 위치 업데이트
+
+                // 현재 위치를 로그로 출력
+                Log.d("LOG_LOCATION", "Latitude: " + location.getLatitude() + ", Longitude: " + location.getLongitude());
             }
         });
 
+//        naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
+        naverMap.setLocationTrackingMode(LocationTrackingMode.NoFollow);
+
+
     }
 
+    //위치 권한 요청 결과를 처리하는 메소드
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // 추가된 부분
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (mCurrentLocation != null) {
+                Log.d("LOG_LOCATION_PERMISSION", "Latitude: " + mCurrentLocation.getLatitude() + ", Longitude: " + mCurrentLocation.getLongitude());
+            }
+        }
     }
+
 
     // ... 기존의 MapFragment 코드 ...
 
+    //주어진 경계 내의 음식점 데이터를 가져오는 메소드
     private void fetchFoodData(LatLngBounds currentBounds) {
         Call<getFoodKr> call = RetrofitClient.getFoodApiService().getFoodInfoList(SERVICE_KEY, 1, 10, "json");
         Log.d("LOGcall", call.toString());
@@ -192,7 +234,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,MapStore
                         double lng = singleItem.getLNG();
                         String store_name = singleItem.getMAIN_TITLE();
                         String address = singleItem.getADDR1();
-                        String imageUrl = singleItem.getMAIN_IMG_THUMB(); //가게 썸네일 가져와야 함
+                        String thumb_nail_url = singleItem.getMAIN_IMG_THUMB(); //가게 썸네일 가져와야 함
 
                         LatLng position = new LatLng(lat, lng);
 
@@ -202,13 +244,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,MapStore
                             marker.setMap(mNaverMap);
                             allMarkers.add(marker);
 
+                            if (mCurrentLocation != null) {
+                                Location markerLocation = new Location("");
+                                markerLocation.setLatitude(lat);
+                                markerLocation.setLongitude(lng);
+
+                                float distanceToMarker = mCurrentLocation.distanceTo(markerLocation); // 두 위치 사이의 거리를 미터 단위로 얻습니다.
+                                Log.d("DISTANCE_LOG", "Distance to marker: " + distanceToMarker + " meters");
+                                cardLit.add(new MapStoreCardData(thumb_nail_url, lat, lng, 33, 4, (int) distanceToMarker, store_name, address, true));
+//                                cardLit.add(new MapStoreCardData(thumb_nail_url, lat, lng, 33, 4, 300, store_name, address, true));
+                            }
                             // 리사이클러뷰 데이터 목록 업데이트
-                            cardLit.add(new MapStoreCardData(R.drawable.ic_launcher_background, lat, lng, 33, 4, 300, store_name, address, true));
 //                            Log.d("LOGimage", imageUrl);
 //                            Log.d("LOGAPI", String.valueOf(position));
 
 //                            Log.d("성공", " 위도: " + lat + " 경도: " + lng);
                         }
+
                     }
 
                     cardAdapter.notifyDataSetChanged();
