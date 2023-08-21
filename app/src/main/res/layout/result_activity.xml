@@ -27,7 +27,7 @@
         app:layout_constraintTop_toBottomOf="@+id/storename" />
 
     <ImageView
-        android:id="@+id/anything"
+        android:id="@+id/storeImg"
         android:layout_width="350dp"
         android:layout_height="300dp"
         android:text="Hello World!"

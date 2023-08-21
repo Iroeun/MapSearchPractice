@@ -3,9 +3,7 @@ package com.devinsight.mapsearchpractice.search;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,7 +14,7 @@ public class resultActivity extends AppCompatActivity {
 
     TextView storeName;
     TextView address;
-    ImageView anything;
+    ImageView storeImg;
 
 
     @Override
@@ -26,21 +24,19 @@ public class resultActivity extends AppCompatActivity {
 
         storeName = findViewById(R.id.storename);
         address = findViewById(R.id.address);
-        anything = findViewById(R.id.anything);
+        storeImg = findViewById(R.id.storeImg);
 
         Intent intent = getIntent();
-        int storeImage = intent.getIntExtra("storeImage", -1);
-        if (storeImage != -1) {
-            Glide.with(getApplicationContext()).load(storeImage).into(anything);
+        String storeImage = intent.getStringExtra("storeImage");
+
+        if (storeImage != null ) {
+            Glide.with(getApplicationContext()).load(storeImage).into(storeImg);
         }
         String Name = intent.getStringExtra("Name");
         String storeAddress = intent.getStringExtra("storeAddress");
 
         storeName.setText(Name);
         address.setText(storeAddress);
-
-
-
 
     }
 

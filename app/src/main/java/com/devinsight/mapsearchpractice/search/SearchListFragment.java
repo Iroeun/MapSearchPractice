@@ -53,6 +53,7 @@ public class SearchListFragment extends Fragment implements SearchAdapter.search
 
         // 세팅된 api service를 바탕으로, api 호출
         viewModel.getStoreData();
+        Log.d("storeData", "성공" + viewModel.getStoreLiveData());
 
         // getStoreLiveData()를 통해 storeLiveData를 가져오고
         // getStoreLiveData().observe()
@@ -82,14 +83,14 @@ public class SearchListFragment extends Fragment implements SearchAdapter.search
 
     @Override
     public void onSearchItemClick(View view, Item item, int position) {
+
         // 클릭 이벤트 처리
-        Intent intent = new Intent(getActivity(), resultActivity.class);
+            Intent intent = new Intent(getActivity(), resultActivity.class);
+            intent.putExtra("storeImage", storeList.get(position).getMAIN_IMG_NORMAL());
+            intent.putExtra("Name", storeList.get(position).getMAIN_TITLE());
+            intent.putExtra("storeAddress", storeList.get(position).getADDR1());
+            startActivity(intent);
 
-        intent.putExtra("storeImage", item.getMAIN_IMG_NORMAL());
-        intent.putExtra("Name", item.getMAIN_TITLE());
-        intent.putExtra("storeAddress", item.getADDR1());
-
-        startActivity(intent);
     }
 
 
