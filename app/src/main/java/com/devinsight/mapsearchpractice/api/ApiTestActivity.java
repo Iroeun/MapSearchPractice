@@ -29,8 +29,8 @@ public class ApiTestActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     getFoodKr data = response.body();
                     // 서버에서는 응답을 보냈지만 에러 코드와 함께 온 경우 (예: 404, 500 등)
-                    for(int i = 0; i < data.getGetFoodKr().getItem().size(); i ++) {
-                        Log.d(" 성공 ", " 성공 " + data.getGetFoodKr().getItem().get(0).getMAIN_IMG_NORMAL());
+                    for(int i = 0; i < data.getGetFoodKr().getNumOfRows() ; i ++) {
+                        Log.d(" 성공 ", " 성공 " + data.getGetFoodKr().getItem().get(i).getMAIN_IMG_NORMAL());
                     }
                 }
             }

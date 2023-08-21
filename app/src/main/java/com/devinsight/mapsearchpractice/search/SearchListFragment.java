@@ -1,4 +1,5 @@
 package com.devinsight.mapsearchpractice.search;
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -6,12 +7,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,6 +35,8 @@ public class SearchListFragment extends Fragment implements SearchAdapter.search
     // 뷰모델
     private SearchViewModel viewModel;
 
+    EditText editText;
+
     public SearchListFragment() {
         // Required empty public constructor
     }
@@ -39,6 +45,8 @@ public class SearchListFragment extends Fragment implements SearchAdapter.search
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.searchlist, container, false);
+
+        editText = view.findViewById(R.id.editText);
 
         recyclerView = view.findViewById(R.id.recycler_search_page);
         storeList = new ArrayList<>();
@@ -49,8 +57,6 @@ public class SearchListFragment extends Fragment implements SearchAdapter.search
 
         // 뷰모델 생성
         viewModel = new ViewModelProvider(this).get(SearchViewModel.class);
-
-
         // 세팅된 api service를 바탕으로, api 호출
         viewModel.getStoreData();
         Log.d("storeData", "성공" + viewModel.getStoreLiveData());
@@ -60,15 +66,40 @@ public class SearchListFragment extends Fragment implements SearchAdapter.search
         viewModel.getStoreLiveData().observe(getViewLifecycleOwner(), new Observer<List<Item>>() {
             @Override
             public void onChanged(List<Item> list) {
-        //      data.getGetFoodKr().getItem() == list 형태로 넘어옴
+                //      data.getGetFoodKr().getItem() == list 형태로 넘어옴
                 searchAdapter.setStoreList(list);
                 searchAdapter.notifyDataSetChanged();
-                Log.d("리스트","성공" + storeList.get(0).getMAIN_TITLE());
+                Log.d("리스트", "성공" + storeList.get(0).getMAIN_TITLE());
+
 
             }
         });
 
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int count, int after) {
+                viewModel.search(charSequence.toString());
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        viewModel.getSearchLiveData().observe(getViewLifecycleOwner(), new Observer<List<Item>>() {
+            @Override
+            public void onChanged(List<Item> items) {
+                searchAdapter.setStoreList(items);
+                searchAdapter.notifyDataSetChanged();
+            }
+        });
 
         return view;
     }
@@ -78,21 +109,17 @@ public class SearchListFragment extends Fragment implements SearchAdapter.search
         super.onViewCreated(view, savedInstanceState);
 
 
-
     }
 
     @Override
     public void onSearchItemClick(View view, Item item, int position) {
-
         // 클릭 이벤트 처리
-            Intent intent = new Intent(getActivity(), resultActivity.class);
-            intent.putExtra("storeImage", storeList.get(position).getMAIN_IMG_NORMAL());
-            intent.putExtra("Name", storeList.get(position).getMAIN_TITLE());
-            intent.putExtra("storeAddress", storeList.get(position).getADDR1());
-            startActivity(intent);
-
+        Intent intent = new Intent(getActivity(), resultActivity.class);
+        intent.putExtra("storeImage", storeList.get(position).getMAIN_IMG_NORMAL());
+        intent.putExtra("Name", storeList.get(position).getMAIN_TITLE());
+        intent.putExtra("storeAddress", storeList.get(position).getADDR1());
+        startActivity(intent);
     }
-
 
 
 }

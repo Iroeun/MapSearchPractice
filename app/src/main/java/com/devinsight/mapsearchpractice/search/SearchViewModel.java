@@ -11,6 +11,7 @@ import com.devinsight.mapsearchpractice.api.RetrofitClient;
 import com.devinsight.mapsearchpractice.api.data.Item;
 import com.devinsight.mapsearchpractice.api.data.getFoodKr;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -26,9 +27,8 @@ public class SearchViewModel extends ViewModel {
 
     // streLiveData는 StoreItem을 제네릭타입으로 가지는 List의 형태를 가진다.
     private MutableLiveData<List<Item>> storeLiveData = new MutableLiveData<>();
-
     private MutableLiveData<Throwable> errorLiveData = new MutableLiveData<>();
-    private MutableLiveData<Boolean> editTextClicked = new MutableLiveData<>();
+    private MutableLiveData<List<Item>> searchLiveData = new MutableLiveData<>();
 
     // 모델에서 데이터를 가져오는 로직을 담을 함수를 만들어 준다.
     public void getStoreData(){
@@ -37,7 +37,7 @@ public class SearchViewModel extends ViewModel {
             return;
         }
         // 어디서 ? 우리는 api통신을 통해서 가져옵니다.
-        apiService.getFoodInfoList(SERVICE_KEY,1,10,"json").enqueue(new Callback<getFoodKr>() {
+        apiService.getFoodInfoList(SERVICE_KEY,1,5,"json").enqueue(new Callback<getFoodKr>() {
             @Override
             public void onResponse(Call<getFoodKr> call, Response<getFoodKr> response) {
                 if(response.isSuccessful() && response.body() != null){
@@ -51,6 +51,12 @@ public class SearchViewModel extends ViewModel {
                     // 이는 즉 라이브 데이터에 변화가 생긴게 되는거죠.
                     // 위의 변화를 옵저버가 보고 있습니다.
                     Log.d("성공","가게정보" + storeLiveData.getValue().get(0).getMAIN_TITLE());
+
+//                    if(storeLiveData != null) {
+//                        List<Item> filteredList = storeLiveData.getValue();
+//                        filteredList.clear();
+//                        for(int i = 0 ; i < sear)
+//                    }
                 } else {
                     errorLiveData.setValue(new Throwable("Failed to fetch news"));
                 }
@@ -62,8 +68,26 @@ public class SearchViewModel extends ViewModel {
         });
     }
 
+    public void search(String input){
+        if(storeLiveData != null){
+            List<Item> storeList = storeLiveData.getValue();
+            List<Item> filteredList = new ArrayList<>();
+            for( int i = 0 ; i < storeLiveData.getValue().size(); i ++) {
+                if(storeList.get(i).getMAIN_TITLE().toLowerCase().contains(input.toLowerCase()) || storeList.get(i).getADDR1().toLowerCase().contains(input.toLowerCase())){
+                    filteredList.add(storeList.get(i));
+                }
+            }
+            searchLiveData.setValue(filteredList);
+        }
+
+    }
+
     public LiveData<List<Item>> getStoreLiveData() {
         return storeLiveData;
+    }
+
+    public LiveData<List<Item>> getSearchLiveData() {
+        return searchLiveData;
     }
 
     public LiveData<Throwable> getErrorLiveData(){
